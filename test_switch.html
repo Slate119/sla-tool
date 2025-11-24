@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>页面切换测试</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+        
+        .nav-buttons {
+            margin-bottom: 20px;
+        }
+        
+        .nav-btn {
+            padding: 10px 20px;
+            margin-right: 10px;
+            border: 2px solid #333;
+            background: white;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        
+        .nav-btn.active {
+            background: #007bff;
+            color: white;
+            border-color: #007bff;
+        }
+        
+        .tool-page {
+            display: none;
+            padding: 20px;
+            border: 2px solid #ddd;
+            min-height: 300px;
+        }
+        
+        .tool-page.active {
+            display: block !important;
+        }
+        
+        .debug-info {
+            margin-top: 20px;
+            padding: 10px;
+            background: #f0f0f0;
+            font-family: monospace;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <h1>页面切换调试工具</h1>
+    
+    <div class="nav-buttons">
+        <button id="btn1" class="nav-btn active">页面1</button>
+        <button id="btn2" class="nav-btn">页面2</button>
+        <button id="btn3" class="nav-btn">页面3</button>
+    </div>
+    
+    <div id="page1" class="tool-page active">
+        <h2>这是页面1</h2>
+        <p>JSON格式化工具内容</p>
+    </div>
+    
+    <div id="page2" class="tool-page">
+        <h2>这是页面2</h2>
+        <p>CURL解析工具内容</p>
+    </div>
+    
+    <div id="page3" class="tool-page">
+        <h2>这是页面3</h2>
+        <p>密码工具内容</p>
+    </div>
+    
+    <div class="debug-info" id="debugInfo">
+        等待操作...
+    </div>
+    
+    <script>
+        const debugInfo = document.getElementById('debugInfo');
+        
+        function log(message) {
+            const time = new Date().toLocaleTimeString();
+            debugInfo.innerHTML += `[${time}] ${message}<br>`;
+            console.log(message);
+        }
+        
+        document.addEventListener('DOMContentLoaded', () => {
+            log('DOM加载完成');
+            
+            const btn1 = document.getElementById('btn1');
+            const btn2 = document.getElementById('btn2');
+            const btn3 = document.getElementById('btn3');
+            const page1 = document.getElementById('page1');
+            const page2 = document.getElementById('page2');
+            const page3 = document.getElementById('page3');
+            
+            log(`按钮1存在: ${!!btn1}`);
+            log(`按钮2存在: ${!!btn2}`);
+            log(`按钮3存在: ${!!btn3}`);
+            log(`页面1存在: ${!!page1}`);
+            log(`页面2存在: ${!!page2}`);
+            log(`页面3存在: ${!!page3}`);
+            
+            function switchPage(targetPage, targetBtn) {
+                log(`切换到: ${targetPage.id}`);
+                
+                // 隐藏所有页面
+                [page1, page2, page3].forEach(page => {
+                    page.classList.remove('active');
+                    page.style.display = 'none';
+                    log(`隐藏: ${page.id}`);
+                });
+                
+                // 移除所有按钮激活状态
+                [btn1, btn2, btn3].forEach(btn => {
+                    btn.classList.remove('active');
+                });
+                
+                // 显示目标页面
+                targetPage.classList.add('active');
+                targetPage.style.display = 'block';
+                targetBtn.classList.add('active');
+                
+                log(`显示: ${targetPage.id}, display=${targetPage.style.display}`);
+                log(`实际display: ${getComputedStyle(targetPage).display}`);
+            }
+            
+            btn1.addEventListener('click', () => switchPage(page1, btn1));
+            btn2.addEventListener('click', () => switchPage(page2, btn2));
+            btn3.addEventListener('click', () => switchPage(page3, btn3));
+            
+            log('事件监听器已添加');
+        });
+    </script>
+</body>
+</html>

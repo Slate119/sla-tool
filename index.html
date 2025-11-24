@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JSON 格式化工具</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <!-- 全局导航 -->
+    <nav class="main-nav">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <i class="fas fa-tools"></i>
+                <h2>开发工具箱</h2>
+            </div>
+            <div class="nav-menu">
+                <button id="jsonToolBtn" class="nav-btn active">
+                    <i class="fas fa-code"></i>
+                    <span>JSON 格式化</span>
+                </button>
+                <button id="curlToolBtn" class="nav-btn">
+                    <i class="fas fa-terminal"></i>
+                    <span>CURL 解析</span>
+                </button>
+                <button id="passwordToolBtn" class="nav-btn">
+                    <i class="fas fa-key"></i>
+                    <span>密码工具</span>
+                </button>
+            </div>
+            <div class="nav-mobile-toggle">
+                <i class="fas fa-bars"></i>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <!-- JSON 格式化工具页面 -->
+        <div id="jsonToolPage" class="tool-page active">
+            <!-- 头部 -->
+            <header class="header">
+                <div class="header-content">
+                    <h1><i class="fas fa-code"></i> JSON 格式化工具</h1>
+                    <p>快速格式化和压缩JSON数据，提升开发效率</p>
+                </div>
+            </header>
+
+            <!-- 主要内容区域 -->
+            <main class="main-content">
+                <!-- 操作控制面板 -->
+                <div class="control-panel">
+                    <div class="operation-section">
+                        <div class="operation-buttons">
+                            <button id="formatBtn" class="btn btn-primary active">
+                                <i class="fas fa-indent"></i> 格式化
+                            </button>
+                            <button id="compressBtn" class="btn btn-secondary">
+                                <i class="fas fa-compress"></i> 压缩
+                            </button>
+                        </div>
+                        <div class="format-options">
+                            <label class="option-label">
+                                <span>缩进空格：</span>
+                                <select id="indentSelect" class="indent-select">
+                                    <option value="2">2空格</option>
+                                    <option value="4" selected>4空格</option>
+                                </select>
+                            </label>
+                        </div>
+                    </div>
+                <div class="convert-section">
+                    <label class="option-label">
+                        <span>转换为：</span>
+                        <select id="convertSelect" class="convert-select">
+                            <option value="none">不转换</option>
+                            <option value="yaml">YAML</option>
+                            <option value="xml">XML</option>
+                            <option value="string">转义字符串</option>
+                        </select>
+                    </label>
+                </div>
+                <div class="action-buttons">
+                    <button id="clearBtn" class="btn btn-outline">
+                        <i class="fas fa-trash"></i> 清空
+                    </button>
+                    <button id="exampleBtn" class="btn btn-outline">
+                        <i class="fas fa-magic"></i> 示例
+                    </button>
+                </div>
+            </div>
+
+            <!-- 编辑器区域 -->
+            <div class="editor-section">
+                <!-- 输入区域 -->
+                <div class="editor-panel">
+                    <div class="panel-header">
+                        <h3><i class="fas fa-edit"></i> 输入 JSON</h3>
+                        <div class="panel-actions">
+                            <button id="pasteBtn" class="btn-icon" title="粘贴">
+                                <i class="fas fa-paste"></i>
+                            </button>
+                            <button id="copyInputBtn" class="btn-icon" title="复制输入">
+                                <i class="fas fa-copy"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <textarea id="inputArea" placeholder="请输入或粘贴 JSON 字符串..." 
+                              spellcheck="false"></textarea>
+                    <div class="status-bar">
+                        <span id="inputStatus">等待输入...</span>
+                        <span id="inputCount">0 字符</span>
+                    </div>
+                </div>
+
+                <!-- 处理按钮 -->
+                <div class="process-section">
+                    <button id="processBtn" class="btn btn-process">
+                        <i class="fas fa-play"></i>
+                        <span>处理</span>
+                    </button>
+                    <div class="process-info">
+                        <small>点击处理或按 Ctrl+Enter</small>
+                    </div>
+                </div>
+
+                <!-- 输出区域 -->
+                <div class="editor-panel">
+                    <div class="panel-header">
+                        <h3><i class="fas fa-file-code"></i> 输出结果</h3>
+                        <div class="panel-actions">
+                            <button id="copyOutputBtn" class="btn-icon" title="复制结果">
+                                <i class="fas fa-copy"></i>
+                            </button>
+                            <button id="downloadBtn" class="btn-icon" title="下载">
+                                <i class="fas fa-download"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <textarea id="outputArea" placeholder="处理结果将在这里显示..." 
+                              spellcheck="false" readonly></textarea>
+                    <div class="status-bar">
+                        <span id="outputStatus">等待处理...</span>
+                        <span id="outputCount">0 字符</span>
+                    </div>
+                </div>
+            </div>
+        </main>
+        </div>
+
+        <!-- curl解析工具页面 -->
+        <div id="curlToolPage" class="tool-page">
+            <!-- 头部 -->
+            <header class="header">
+                <div class="header-content">
+                    <h1><i class="fas fa-terminal"></i> CURL 解析工具</h1>
+                    <p>快速解析CURL命令，提取请求信息</p>
+                </div>
+            </header>
+
+            <!-- 主要内容区域 -->
+            <main class="main-content">
+                <div class="editor-panel">
+                    <div class="panel-header">
+                        <h3><i class="fas fa-terminal"></i> 输入curl命令</h3>
+                        <div class="panel-actions">
+                            <button id="curlExampleBtn" class="btn-icon" title="示例curl命令">
+                                <i class="fas fa-magic"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <textarea id="curlInput" placeholder="请输入curl命令，如：curl -X POST https://api.example.com/data -H 'Content-Type: application/json' -d '{\"key\": \"value\"}'" spellcheck="false"></textarea>
+                    <div class="status-bar">
+                        <span id="curlInputStatus">等待输入...</span>
+                        <span id="curlInputCount">0 字符</span>
+                    </div>
+                </div>
+                <div class="process-section">
+                    <button id="parseCurlConfirmBtn" class="btn btn-process">
+                        <i class="fas fa-play"></i>
+                        <span>解析命令</span>
+                    </button>
+                </div>
+                <div class="editor-panel">
+                    <div class="panel-header">
+                        <h3><i class="fas fa-list"></i> 解析结果</h3>
+                        <div class="panel-actions">
+                            <button id="copyResultBtn" class="btn-icon" title="复制结果">
+                                <i class="fas fa-copy"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div id="curlParseResult" class="curl-result">解析结果将在这里显示</div>
+                </div>
+            </main>
+        </div>
+
+        <!-- 密码工具页面 -->
+        <div id="passwordToolPage" class="tool-page">
+            <!-- 头部 -->
+            <header class="header">
+                <div class="header-content">
+                    <h1><i class="fas fa-key"></i> 密码工具</h1>
+                    <p>生成安全密码，检测密码强度</p>
+                </div>
+            </header>
+
+            <!-- 主要内容区域 -->
+            <main class="main-content">
+                <div class="password-tool-tabs">
+                    <button id="generateTabBtn" class="tab-btn active">
+                        <i class="fas fa-plus-circle"></i> 生成密码
+                    </button>
+                    <button id="checkTabBtn" class="tab-btn">
+                        <i class="fas fa-shield-alt"></i> 检测强度
+                    </button>
+                </div>
+
+                <!-- 密码生成器 -->
+                <div id="passwordGenerateTab" class="password-tab-content">
+                    <div class="editor-panel">
+                        <div class="panel-header">
+                            <h3><i class="fas fa-cogs"></i> 密码生成配置</h3>
+                        </div>
+                        <div class="password-config">
+                            <div class="config-row">
+                                <label class="config-label">
+                                    <span>密码长度：</span>
+                                    <input type="range" id="passwordLength" min="4" max="128" value="12" class="length-slider">
+                                    <span id="lengthValue" class="length-display">12</span>
+                                </label>
+                            </div>
+                            <div class="config-row">
+                                <div class="config-options">
+                                    <label class="checkbox-label">
+                                        <input type="checkbox" id="includeUppercase" checked>
+                                        <span class="checkmark"></span>
+                                        大写字母 (A-Z)
+                                    </label>
+                                    <label class="checkbox-label">
+                                        <input type="checkbox" id="includeLowercase" checked>
+                                        <span class="checkmark"></span>
+                                        小写字母 (a-z)
+                                    </label>
+                                    <label class="checkbox-label">
+                                        <input type="checkbox" id="includeNumbers" checked>
+                                        <span class="checkmark"></span>
+                                        数字 (0-9)
+                                    </label>
+                                    <label class="checkbox-label">
+                                        <input type="checkbox" id="includeSymbols" checked>
+                                        <span class="checkmark"></span>
+                                        特殊符号 (!@#$%^&*)
+                                    </label>
+                                    <label class="checkbox-label">
+                                        <input type="checkbox" id="excludeSimilar">
+                                        <span class="checkmark"></span>
+                                        排除相似字符 (0oO1lI)
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="config-row">
+                                <button id="generatePasswordBtn" class="btn btn-primary">
+                                    <i class="fas fa-magic"></i> 生成密码
+                                </button>
+                                <button id="batchGenerateBtn" class="btn btn-outline">
+                                    <i class="fas fa-copy"></i> 批量生成(5个)
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="editor-panel">
+                        <div class="panel-header">
+                            <h3><i class="fas fa-key"></i> 生成结果</h3>
+                            <div class="panel-actions">
+                                <button id="copyPasswordBtn" class="btn-icon" title="复制密码">
+                                    <i class="fas fa-copy"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div id="passwordResult" class="password-result">点击"生成密码"开始</div>
+                        <div class="status-bar">
+                            <span id="passwordStatus">等待生成...</span>
+                            <span id="passwordStrength"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 密码强度检测 -->
+                <div id="passwordCheckTab" class="password-tab-content" style="display: none;">
+                    <div class="editor-panel">
+                        <div class="panel-header">
+                            <h3><i class="fas fa-edit"></i> 输入密码</h3>
+                            <div class="panel-actions">
+                                <button id="showPasswordBtn" class="btn-icon" title="显示/隐藏密码">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="password-input-container">
+                            <input type="password" id="passwordInput" placeholder="请输入要检测的密码..." class="password-input">
+                            <div class="password-strength-bar">
+                                <div class="strength-fill"></div>
+                            </div>
+                        </div>
+                        <div class="status-bar">
+                            <span id="checkInputStatus">等待输入...</span>
+                            <span id="checkInputCount">0 字符</span>
+                        </div>
+                    </div>
+                    <div class="editor-panel">
+                        <div class="panel-header">
+                            <h3><i class="fas fa-shield-alt"></i> 安全评估</h3>
+                        </div>
+                        <div id="passwordAnalysis" class="password-analysis">输入密码后将显示详细分析</div>
+                    </div>
+                </div>
+            </main>
+        </div>
+
+        <!-- 功能说明 -->
+        <section class="features">
+            <div class="feature-card">
+                <i class="fas fa-indent"></i>
+                <h4>格式化</h4>
+                <p>将压缩的JSON转换为易读的格式</p>
+            </div>
+            <div class="feature-card">
+                <i class="fas fa-compress"></i>
+                <h4>压缩</h4>
+                <p>移除空格和换行，生成紧凑格式</p>
+            </div>
+            <div class="feature-card">
+                <i class="fas fa-copy"></i>
+                <h4>快速复制</h4>
+                <p>一键复制结果到剪贴板</p>
+            </div>
+            <div class="feature-card">
+                <i class="fas fa-check-circle"></i>
+                <h4>格式验证</h4>
+                <p>自动检测并提示JSON格式错误</p>
+            </div>
+            <div class="feature-card">
+                <i class="fas fa-terminal"></i>
+                <h4>curl解析</h4>
+                <p>解析curl命令，提取请求信息</p>
+            </div>
+            <div class="feature-card">
+                <i class="fas fa-key"></i>
+                <h4>密码工具</h4>
+                <p>生成安全密码，检测密码强度</p>
+            </div>
+        </section>
+
+        <!-- 页脚 -->
+        <footer class="footer">
+            <div class="footer-content">
+                <p>&copy; 2024 JSON格式化工具 - 提升开发效率的好帮手</p>
+                <p class="privacy-note">
+                    <i class="fas fa-shield-alt"></i> 
+                    所有数据在浏览器本地处理，不会上传到服务器
+                </p>
+            </div>
+        </footer>
+    </div>
+
+    <!-- 通知提示 -->
+    <div id="notification" class="notification"></div>
+
+    <!-- 加载动画覆盖层 -->
+    <div class="loading-overlay">
+        <div class="loading-spinner"></div>
+    </div>
+
+    <!-- 引入 js-yaml 库用于 YAML 转换 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/js-yaml/4.1.0/js-yaml.min.js"></script>
+    <script src="script.js"></script>
+    <!-- 页面切换修复脚本 -->
+    <script src="fix_tool_switch.js"></script>
+</body>
+</html>
