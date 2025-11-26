@@ -179,3 +179,11 @@ curl -X POST https://api.example.com/users \
 - 熵值：84.2 bits
 - 建议：密码强度良好，建议定期更换
 ```
+
+使用效果：
+![密码强度检测示例](https://example.com/password_strength.png)
+
+
+## 📚 更多信息
+运行视频和操作效果：
+https://www.bilibili.com/video/BV1n8UbBKEn6/?buvid=XU90A5D99FC85387D0B5ED40FBDA495765354&is_story_h5=false&mid=tjPWlWTTyCeCx7uyLxfLjw%3D%3D&plat_id=147&share_from=ugc&share_medium=android&share_plat=android&share_session_id=9b64d341-0a07-406a-a207-3aeb1af576d5&share_source=WEIXIN&share_tag=s_i&timestamp=1764123996&unique_k=sqpCqwe&up_id=523850853&share_source=weixin
